@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>RIVE — Services écosystémiques · Trois-Rivières</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.js"></script>
+<style>
+:root{--bg:#f4f6f5;--panel:#fff;--ink:#1a2421;--muted:#5c6b66;--accent:#0f766e;--accent-dark:#0b544e;--border:#e2e8e5;--shadow:0 2px 10px rgba(0,0,0,.08)}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg)}
+.app{display:flex;flex-direction:column;height:100vh}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:56px;background:var(--accent);color:#fff;box-shadow:var(--shadow);z-index:20}
+.brand{display:flex;align-items:baseline;gap:10px;min-width:0}
+.logo{font-weight:800;font-size:20px;letter-spacing:1px}
+.tagline{font-size:13px;opacity:.9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.view-switch{display:flex;background:rgba(255,255,255,.15);border-radius:7px;padding:3px}
+.view-switch button{font:inherit;font-size:13px;font-weight:600;padding:5px 12px;border:0;background:transparent;color:#fff;border-radius:5px;cursor:pointer}
+.view-switch button.active{background:#fff;color:var(--accent-dark)}
+.burger{display:none;font:inherit;font-size:18px;padding:4px 10px;border:1px solid rgba(255,255,255,.5);background:transparent;color:#fff;border-radius:6px;cursor:pointer;margin-left:8px}
+.body{display:flex;flex:1;min-height:0}
+.sidebar{width:344px;background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column;min-height:0}
+.tabs{display:flex;border-bottom:1px solid var(--border)}
+.tabs button{flex:1;padding:11px 6px;border:0;background:none;font:inherit;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent}
+.tabs button.active{color:var(--accent);border-bottom-color:var(--accent)}
+.panel-scroll{overflow-y:auto;padding:16px}
+h2{font-size:15px;margin:0 0 12px}
+h3{font-size:13px;margin:18px 0 8px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.layer-list,.legend{list-style:none;margin:0;padding:0}
+.layer-list li{margin-bottom:10px}
+.layer-list label{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+.swatch{width:16px;height:16px;border-radius:3px;flex:none;border:1px solid rgba(0,0,0,.15)}
+.tag-real{margin-left:6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#fff;background:#0f766e;padding:1px 5px;border-radius:4px}
+.tag-demo{margin-left:6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#fff;background:#9a7b4f;padding:1px 5px;border-radius:4px}
+.legend li{display:flex;align-items:center;gap:8px;font-size:12px;margin-bottom:4px}
+.hint{font-size:12px;color:var(--muted);line-height:1.5;margin-top:14px}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.stat{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px}
+.stat:first-child{grid-column:1/-1}
+.stat .num{font-size:22px;font-weight:800;color:var(--accent-dark)}
+.stat .lbl{font-size:12px;color:var(--muted)}
+.sort-row{font-size:13px;margin-bottom:10px}
+.sort-row select{font:inherit;padding:5px;border-radius:6px;border:1px solid var(--border)}
+.zone-list{list-style:none;margin:0;padding:0}
+.zone-list li{display:grid;grid-template-columns:12px 1fr 70px 32px;align-items:center;gap:8px;padding:8px 4px;border-bottom:1px solid var(--border);cursor:pointer;font-size:13px}
+.zone-list li:hover{background:var(--bg)}
+.dot{width:10px;height:10px;border-radius:50%}
+.zn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden}
+.bar .fill{display:block;height:100%}
+.val{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.meta-card{border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:10px;background:var(--bg)}
+.meta-head{font-weight:700;font-size:13px;margin-bottom:6px}
+.meta-dl{font-size:12px;margin:0}
+.meta-dl>div{display:grid;grid-template-columns:84px 1fr;gap:8px;padding:2px 0}
+.meta-dl dt{color:var(--muted)}.meta-dl dd{margin:0}
+.meta-link,.knowledge a{color:var(--accent);text-decoration:none;font-size:12px;font-weight:600}
+.meta-link:hover,.knowledge a:hover{text-decoration:underline}
+.weights{list-style:none;margin:6px 0;padding:0}
+.weights li{display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:5px}
+.weights .w{margin-left:auto;color:var(--muted);font-variant-numeric:tabular-nums}
+.cop15{list-style:none;margin:6px 0;padding:0}
+.cop15 li{font-size:12px;margin-bottom:5px;line-height:1.4}
+.knowledge{list-style:none;margin:6px 0;padding:0}
+.knowledge li{margin-bottom:7px;line-height:1.4}
+.panel-scroll code{background:#eef2f0;padding:1px 4px;border-radius:3px;font-size:11px}
+.map-wrap{position:relative;flex:1;min-width:0}
+.view-layer{position:absolute;inset:0}
+#map{position:absolute;inset:0}
+.geolibre-note{font-size:12px;color:var(--muted);background:#fff7ed;border-bottom:1px solid var(--border);padding:10px 12px;line-height:1.55}
+.geolibre-note code{background:#eef2f0;padding:1px 4px;border-radius:3px;word-break:break-all}
+.geolibre-panel{position:absolute;inset:0;display:flex;flex-direction:column}
+.geolibre-panel iframe{flex:1;width:100%;border:0}
+.feature-card{position:absolute;top:14px;right:14px;width:320px;max-width:calc(100% - 28px);background:var(--panel);border-radius:10px;box-shadow:var(--shadow);padding:16px;z-index:10;max-height:calc(100% - 28px);overflow-y:auto}
+.feature-card h3{color:var(--ink);text-transform:none;letter-spacing:0;margin:0 30px 8px 0;font-size:16px}
+.close{position:absolute;top:8px;right:10px;border:0;background:none;font-size:22px;line-height:1;cursor:pointer;color:var(--muted)}
+.badge{display:inline-block;color:#fff;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px}
+.meta{font-size:12px;color:var(--muted);margin:10px 0 4px}
+.svc{display:grid;grid-template-columns:1fr 90px 28px;align-items:center;gap:8px;font-size:12px;margin-bottom:8px}
+.svc-bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden}
+.svc-fill{display:block;height:100%}
+.svc-val{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.svc.pressure{margin-top:6px;padding-top:8px;border-top:1px dashed var(--border)}
+.feature-card dl{font-size:13px;margin:12px 0 0}
+.feature-card dl>div{display:flex;justify-content:space-between;gap:12px;padding:3px 0;border-bottom:1px solid var(--border)}
+.feature-card dt{color:var(--muted)}.feature-card dd{margin:0;font-weight:600;text-align:right}
+@media(max-width:720px){.tagline{display:none}.burger{display:inline-block}
+.sidebar{position:absolute;top:56px;bottom:0;left:0;z-index:15;width:88%;max-width:344px;transform:translateX(-102%);transition:transform .25s;box-shadow:var(--shadow)}
+.sidebar.open{transform:translateX(0)}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><span class="logo">RIVE</span><span class="tagline">Services écosystémiques · Région de Trois-Rivières</span></div>
+    <div style="display:flex;align-items:center">
+      <div class="view-switch"><button id="v-rive" class="active">Carte RIVE</button><button id="v-geo">GeoLibre</button></div>
+      <button class="burger" id="burger">☰</button>
+    </div>
+  </header>
+  <div class="body">
+    <aside class="sidebar" id="sidebar">
+      <nav class="tabs"><button id="t-couches" class="active">Couches</button><button id="t-ind">Indicateurs</button><button id="t-info">Méthodo</button></nav>
+      <div class="panel-scroll" id="panel"></div>
+    </aside>
+    <main class="map-wrap">
+      <div class="view-layer" id="layer-rive"><div id="map"></div><div id="card"></div></div>
+      <div class="view-layer" id="layer-geo" style="display:none">
+        <div class="geolibre-panel">
+          <div class="geolibre-note">Le projet RIVE (milieux humides MELCCFP + unit&eacute;s d&rsquo;analyse) est pouss&eacute; automatiquement dans GeoLibre. <strong>Zoomer sur la r&eacute;gion (niveau &ge; 10)</strong> — le service masque les milieux humides au-del&agrave; du 1:600 000. Chargement manuel si besoin&nbsp;: <em>Add Data &rarr; ArcGIS</em>, coller <code>https://geo.environnement.gouv.qc.ca/donnees/rest/services/Biodiversite/MH_potentiels/MapServer</code> (ou le WMS <code>https://geo.environnement.gouv.qc.ca/donnees/services/Biodiversite/MH_potentiels/MapServer/WMSServer</code>).</div>
+          <iframe id="geolibre-frame" title="GeoLibre" src="https://web.geolibre.app/?embed=1&amp;layout=compact" allow="clipboard-read; clipboard-write; geolocation"></iframe>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script>
+// Pont GeoLibre (useEmbedBridge, activé par ?embed=1) : l'iframe annonce
+// `geolibre:ready`, on lui pousse alors le projet complet — aucune requête
+// cross-origin, donc aucun problème de CORS ni de Local Network Access.
+const GEOLIBRE_ORIGIN = "https://web.geolibre.app";
+const GEOLIBRE_PROJECT = __GEOLIBRE_PROJECT__;
+window.addEventListener("message", (e) => {
+  const frame = document.getElementById("geolibre-frame");
+  if (e.origin !== GEOLIBRE_ORIGIN || !frame || e.source !== frame.contentWindow) return;
+  if (e.data && e.data.type === "geolibre:ready") {
+    frame.contentWindow.postMessage(
+      { type: "geolibre:load-project", project: GEOLIBRE_PROJECT, seq: 1 },
+      GEOLIBRE_ORIGIN
+    );
+  }
+});
+</script>
+<script>
+const DATA = __DATA__;
+const MH_SERVICE="https://geo.environnement.gouv.qc.ca/donnees/rest/services/Biodiversite/MH_potentiels/MapServer";
+const MH_ATTR="© Gouvernement du Québec — MELCCFP, CMHPQ 2023";
+const MH_CLASSES=[["Eau peu profonde","#6677cd"],["Prairie humide","#f5f57a"],["Marais","#ff8f7f"],["Marécage","#a3ff73"],["Tourbière boisée","#5c8944"],["Tourbière ouverte indifférenciée","#ffebaf"],["Tourbière ouverte minérotrophe","#f5ca7a"],["Tourbière ouverte ombrotrophe","#cdaa66"],["Complexe palsique","#df7fc2"],["Milieu humide indifférencié","#cccccc"]];
+const MH_FIELDS=[["TYPE","Type"],["PHYSIONOMIE","Physionomie"],["SYS_TROPHIQUE","Régime trophique"],["SUPERFICIE","Superficie (ha)"],["CONFIANCE","Confiance"],["PARTICULARITE","Particularité"],["SOURCE","Source(s)"]];
+const PRIORITY_COLORS={"Très élevée":"#7a0177","Élevée":"#c51b8a","Moyenne":"#f768a1","Faible":"#fbb4b9"};
+const SERVICES=[["s_crue","Régulation des crues","#2c7fb8",0.22],["s_filtration","Filtration de l’eau","#41b6c4",0.22],["s_carbone","Stockage du carbone","#238443",0.18],["s_habitat","Habitat / biodiversité","#6a51a3",0.24],["s_recreation","Récréation / culturel","#d95f0e",0.14]];
+const METADATA=[
+ {couche:"Milieux humides potentiels",reel:true,rows:[["Producteur","MELCCFP — Direction de la connaissance écologique"],["Jeu","Cartographie des milieux humides potentiels du Québec (CMHPQ), 2023"],["Couverture","Province de Québec"],["Échelle","Agrégation multi-sources — masquée au-delà du 1:600 000"],["Typologie","5 classes / 16 sous-classes"],["Attributs","CLASSE, TYPE, PHYSIONOMIE, SYS_TROPHIQUE, SUPERFICIE, CONFIANCE, SOURCE"],["Diffusion","Données Québec (licence ouverte — voir la fiche)"],["Lignée","Assemblage de bases existantes (dont Canards Illimités) à échelles distinctes ; un niveau de CONFIANCE accompagne chaque entité."]],url:"https://www.donneesquebec.ca/recherche/fr/dataset/milieux-humides-potentiels"},
+ {couche:"Fond de carte",reel:true,rows:[["Producteur","OpenFreeMap / OpenStreetMap"],["Jeu","Tuiles vectorielles « positron »"],["Diffusion","OpenStreetMap © contributeurs (ODbL)"]],url:"https://openfreemap.org/"},
+ {couche:"Unités d’analyse & indicateurs",reel:false,rows:[["Producteur","RIVE (démonstration)"],["Jeu","Unités illustratives + scores de services écosystémiques"],["Couverture","Région de Trois-Rivières"],["Diffusion","Données de démonstration — non destinées à la décision"],["Lignée","À remplacer par des statistiques zonales sur les données réelles (Phase 2)."]],url:""}
+];
+const KNOWLEDGE=[
+ ["Jeu de données — Milieux humides potentiels (Données Québec)","https://www.donneesquebec.ca/recherche/fr/dataset/milieux-humides-potentiels"],
+ ["Service ArcGIS REST — MH potentiels (MapServer)","https://geo.environnement.gouv.qc.ca/donnees/rest/services/Biodiversite/MH_potentiels/MapServer"],
+ ["MELCCFP — Milieux humides et hydriques","https://www.environnement.gouv.qc.ca/eau/milieux-humides/"],
+ ["ROBVQ — Plans directeurs de l’eau (OBV)","https://robvq.qc.ca/obv-du-quebec/"],
+ ["UNESCO — Réserve de la biosphère du lac Saint-Pierre","https://www.unesco.org/en/mab/lac-saint-pierre"],
+ ["CBD — Cadre mondial de la biodiversité (COP15)","https://www.cbd.int/gbf/"],
+ ["GeoLibre — Ajouter des données (ArcGIS/WMS)","https://geolibre.app/user-guide/adding-data/"]
+];
+const COP15=[["Cible 2","Restauration effective de 30 % des écosystèmes dégradés d’ici 2030"],["Cible 3","Conservation de 30 % des terres et eaux (« 30x30 »)"],["Cible 11","Maintien et renforcement des services écosystémiques"],["Cible 12","Espaces verts et bleus en milieu urbain"]];
+const LAYERS=[
+ {id:"mh_melccfp",label:"Milieux humides potentiels — MELCCFP 2023",type:"arcgis",visible:true,minzoom:10,opacity:.8,real:true},
+ {id:"zones",label:"Unités d’analyse — priorisation 30x30 (cadre méthodo.)",type:"fill",visible:true,legend:"priority",demo:true}
+];
+const prioExpr=["match",["get","classe_priorite"],"Très élevée",PRIORITY_COLORS["Très élevée"],"Élevée",PRIORITY_COLORS["Élevée"],"Moyenne",PRIORITY_COLORS["Moyenne"],"Faible",PRIORITY_COLORS["Faible"],"#ccc"];
+const mhTiles=MH_SERVICE+"/export?bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&size=512,512&dpi=96&format=png32&transparent=true&layers=show:0&f=image";
+let selected=null;
+const map=new maplibregl.Map({container:"map",style:"https://tiles.openfreemap.org/styles/positron",center:[-72.62,46.30],zoom:10.4,attributionControl:{compact:true}});
+map.addControl(new maplibregl.NavigationControl(),"top-right");
+map.addControl(new maplibregl.ScaleControl({unit:"metric"}),"bottom-left");
+new ResizeObserver(()=>map.resize()).observe(document.getElementById("map"));
+map.on("load",()=>{
+ LAYERS.forEach(l=>{
+  const vis=l.visible?"visible":"none";
+  if(l.type==="arcgis"){
+   map.addSource(l.id,{type:"raster",tiles:[mhTiles],tileSize:512,attribution:MH_ATTR});
+   map.addLayer({id:l.id,type:"raster",source:l.id,minzoom:l.minzoom||0,layout:{visibility:vis},paint:{"raster-opacity":l.opacity||1}});
+   return;
+  }
+  map.addSource(l.id,{type:"geojson",data:DATA[l.id]});
+  map.addLayer({id:l.id,type:"fill",source:l.id,layout:{visibility:vis},paint:{"fill-color":l.legend==="priority"?prioExpr:l.color,"fill-opacity":.55,"fill-outline-color":"#fff"}});
+ });
+});
+map.on("click",async e=>{
+ if(map.getLayer("zones")){
+  const hits=map.queryRenderedFeatures(e.point,{layers:["zones"]});
+  if(hits.length){selected=hits[0].properties;renderCard();return;}
+ }
+ const vis=map.getLayer("mh_melccfp")&&map.getLayoutProperty("mh_melccfp","visibility")!=="none";
+ if(!vis)return;
+ try{
+  const b=map.getBounds(),c=map.getCanvas();
+  const ext=b.getWest()+","+b.getSouth()+","+b.getEast()+","+b.getNorth();
+  const url=MH_SERVICE+"/identify?geometry="+e.lngLat.lng+","+e.lngLat.lat+"&geometryType=esriGeometryPoint&sr=4326&layers=all:0&tolerance=4&mapExtent="+ext+"&imageDisplay="+c.width+","+c.height+",96&returnGeometry=false&f=json";
+  const j=await (await fetch(url)).json();
+  if(j.results&&j.results.length){selected=Object.assign({__mh:true},j.results[0].attributes);renderCard();}
+ }catch(err){console.warn("Identify MELCCFP",err);}
+});
+map.on("mousemove",e=>{const o=map.getLayer("zones")&&map.queryRenderedFeatures(e.point,{layers:["zones"]}).length;map.getCanvas().style.cursor=o?"pointer":"";});
+let tab="couches",sort="priorite";
+const panel=document.getElementById("panel");
+function renderPanel(){panel.innerHTML=tab==="couches"?layerPanel():tab==="ind"?indicatorPanel():infoPanel();wire();}
+function layerPanel(){
+ let s='<h2>Couches</h2><ul class="layer-list">';
+ LAYERS.forEach(l=>{let sw=l.color;
+  if(l.legend==="priority")sw="linear-gradient(90deg,#7a0177,#fbb4b9)";
+  else if(l.id==="mh_melccfp")sw="linear-gradient(90deg,#6677cd,#a3ff73,#cdaa66)";
+  const tg=l.real?'<span class="tag-real">réel</span>':(l.demo?'<span class="tag-demo">démo</span>':'');
+  s+='<li><label><input type="checkbox" data-lid="'+l.id+'" '+(l.visible?"checked":"")+'><span class="swatch" style="background:'+sw+'"></span>'+l.label+tg+'</label></li>';});
+ s+='</ul><h3>Milieux humides — classes (MELCCFP)</h3><ul class="legend">';
+ MH_CLASSES.forEach(c=>s+='<li><span class="swatch" style="background:'+c[1]+'"></span>'+c[0]+'</li>');
+ s+='</ul><p class="hint">Donnée réelle diffusée en direct par le service ArcGIS du MELCCFP (CMHPQ 2023). <strong>Zoomez (niveau &ge; 10)</strong> pour l&rsquo;afficher, puis cliquez un milieu humide pour ses attributs réels.</p>';
+ s+='<h3>Légende — priorité 30x30</h3><ul class="legend">';
+ for(const k in PRIORITY_COLORS)s+='<li><span class="swatch" style="background:'+PRIORITY_COLORS[k]+'"></span>'+k+'</li>';
+ s+='</ul><p class="hint">Cadre méthodologique : priorité = 0,6 × score de services + 0,4 × pression (cible « 30x30 » de Kunming-Montréal). Valeurs illustratives — voir l&rsquo;onglet Méthodo.</p>';
+ return s;
+}
+function indicatorPanel(){
+ const z=DATA.zones.features.map(f=>f.properties);
+ const n=z.length,prio=z.filter(x=>x.classe_priorite==="Très élevée"||x.classe_priorite==="Élevée").length;
+ const avg=Math.round(z.reduce((s,x)=>s+x.score_se,0)/n);
+ const ha=z.reduce((s,x)=>s+(x.superficie_ha||0),0).toLocaleString("fr-CA");
+ const rows=z.slice().sort((a,b)=>b[sort]-a[sort]);
+ let opts='<option value="priorite">Priorité 30x30</option><option value="score_se">Score de services</option><option value="pression">Pression</option>';
+ SERVICES.forEach(s=>opts+='<option value="'+s[0]+'">'+s[1]+'</option>');
+ let s='<h2>Indicateurs & priorisation</h2><div class="cards"><div class="stat"><div class="num">'+prio+'/'+n+'</div><div class="lbl">unités à priorité élevée</div></div><div class="stat"><div class="num">'+avg+'</div><div class="lbl">score SE moyen (0–100)</div></div><div class="stat"><div class="num">'+ha+'</div><div class="lbl">hectares analysés</div></div></div><div class="sort-row"><label>Trier par </label><select id="sortSel">'+opts+'</select></div><ul class="zone-list">';
+ rows.forEach(x=>{s+='<li data-zid="'+x.id+'"><span class="dot" style="background:'+PRIORITY_COLORS[x.classe_priorite]+'"></span><span class="zn">'+x.nom+'</span><span class="bar"><span class="fill" style="width:'+x[sort]+'%;background:'+PRIORITY_COLORS[x.classe_priorite]+'"></span></span><span class="val">'+x[sort]+'</span></li>';});
+ s+='</ul><p class="hint">Unités d’analyse : valeurs de démonstration. Modèle décrit dans l’onglet Méthodo et docs/02-architecture.md.</p>';
+ return s;
+}
+function infoPanel(){
+ let s='<h2>Méthodologie & métadonnées</h2><h3>Sources de données</h3>';
+ METADATA.forEach(m=>{
+  s+='<div class="meta-card"><div class="meta-head">'+m.couche+(m.reel?'<span class="tag-real">réel</span>':'<span class="tag-demo">démo</span>')+'</div><dl class="meta-dl">';
+  m.rows.forEach(r=>s+='<div><dt>'+r[0]+'</dt><dd>'+r[1]+'</dd></div>');
+  s+='</dl>'+(m.url?'<a class="meta-link" href="'+m.url+'" target="_blank" rel="noreferrer">Fiche source ↗</a>':'')+'</div>';
+ });
+ s+='<h3>Modèle d’indicateurs & priorisation 30x30</h3><p class="hint">Score de services écosystémiques (0–100), moyenne pondérée :</p><ul class="weights">';
+ SERVICES.forEach(x=>s+='<li><span class="swatch" style="background:'+x[2]+'"></span>'+x[1]+'<span class="w">× '+x[3]+'</span></li>');
+ s+='</ul><p class="hint"><strong>Priorité</strong> = <code>0,6 × score + 0,4 × pression</code>. Quatre classes (Très élevée → Faible) repèrent le tiers supérieur à conserver et les secteurs dégradés à restaurer. Valeurs actuelles <em>illustratives</em> ; en production, statistiques zonales sur les couches réelles.</p>';
+ s+='<h3>Cadre COP15 (Kunming-Montréal)</h3><ul class="cop15">';
+ COP15.forEach(c=>s+='<li><strong>'+c[0]+'</strong> — '+c[1]+'</li>');
+ s+='</ul><h3>Accès direct à la connaissance</h3><ul class="knowledge">';
+ KNOWLEDGE.forEach(k=>s+='<li><a href="'+k[1]+'" target="_blank" rel="noreferrer">'+k[0]+' ↗</a></li>');
+ s+='</ul>';
+ return s;
+}
+function wire(){
+ panel.querySelectorAll("input[data-lid]").forEach(cb=>cb.onchange=()=>{
+  const l=LAYERS.find(x=>x.id===cb.dataset.lid);l.visible=cb.checked;
+  if(map.getLayer(l.id))map.setLayoutProperty(l.id,"visibility",cb.checked?"visible":"none");});
+ const sel=panel.querySelector("#sortSel");if(sel){sel.value=sort;sel.onchange=()=>{sort=sel.value;renderPanel();};}
+ panel.querySelectorAll("li[data-zid]").forEach(li=>li.onclick=()=>{selected=DATA.zones.features.find(f=>f.properties.id==li.dataset.zid).properties;renderCard();});
+}
+function renderCard(){
+ const c=document.getElementById("card");
+ if(!selected){c.innerHTML="";return;}
+ const f=selected;
+ if(f.__mh){
+  let dl="";MH_FIELDS.forEach(k=>{const v=f[k[0]];if(v!==undefined&&v!==""&&v!=="Null")dl+='<div><dt>'+k[1]+'</dt><dd>'+v+'</dd></div>';});
+  c.innerHTML='<div class="feature-card"><button class="close" id="cardClose">×</button><h3>'+(f.CLASSE||"Milieu humide")+'</h3><div class="badge" style="background:#1d91c0">Milieu humide · MELCCFP</div><dl>'+dl+'</dl><p class="meta">Source : CMHPQ 2023 — © Gouvernement du Québec (MELCCFP)</p></div>';
+ }else{
+  let svc="";SERVICES.forEach(s=>{svc+='<div class="svc"><span>'+s[1]+'</span><span class="svc-bar"><span class="svc-fill" style="width:'+f[s[0]]+'%;background:'+s[2]+'"></span></span><span class="svc-val">'+f[s[0]]+'</span></div>';});
+  svc+='<div class="svc pressure"><span>Pression</span><span class="svc-bar"><span class="svc-fill" style="width:'+f.pression+'%;background:#b30000"></span></span><span class="svc-val">'+f.pression+'</span></div>';
+  c.innerHTML='<div class="feature-card"><button class="close" id="cardClose">×</button><h3>'+f.nom+'</h3><div class="badge" style="background:'+PRIORITY_COLORS[f.classe_priorite]+'">Priorité '+f.classe_priorite+' · '+f.priorite+'</div><p class="meta">Cadre méthodologique (démo) · '+Number(f.superficie_ha).toLocaleString("fr-CA")+' ha · Score SE '+f.score_se+'/100</p>'+svc+'</div>';
+ }
+ document.getElementById("cardClose").onclick=()=>{selected=null;renderCard();};
+}
+document.getElementById("t-couches").onclick=e=>{tab="couches";setTab(e.target);renderPanel();};
+document.getElementById("t-ind").onclick=e=>{tab="ind";setTab(e.target);renderPanel();};
+document.getElementById("t-info").onclick=e=>{tab="info";setTab(e.target);renderPanel();};
+function setTab(btn){document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));btn.classList.add("active");}
+const vr=document.getElementById("v-rive"),vg=document.getElementById("v-geo");
+vr.onclick=()=>{vr.classList.add("active");vg.classList.remove("active");document.getElementById("layer-rive").style.display="block";document.getElementById("layer-geo").style.display="none";map.resize();};
+vg.onclick=()=>{vg.classList.add("active");vr.classList.remove("active");document.getElementById("layer-rive").style.display="none";document.getElementById("layer-geo").style.display="block";};
+document.getElementById("burger").onclick=()=>document.getElementById("sidebar").classList.toggle("open");
+renderPanel();
+</script>
+</body>
+</html>

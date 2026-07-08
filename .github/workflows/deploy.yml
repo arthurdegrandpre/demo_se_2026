@@ -1,0 +1,79 @@
+name: Déployer RIVE sur GitHub Pages
+
+# Publie le tableau de bord RIVE (Vite/React) + les projets GeoLibre + la démo
+# autonome sur GitHub Pages. Les fichiers .geolibre.json et l'extrait CMHPQ sont
+# alors servis à des URL publiques (github.io), ce qui active les liens de
+# partage GeoLibre `?url=` et la lecture GeoParquet en streaming HTTP range.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Un seul déploiement à la fois ; ne pas annuler un déploiement en cours.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurer Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: prototype/package-lock.json
+
+      - name: Installer les dépendances
+        working-directory: prototype
+        run: npm ci
+
+      - name: Régénérer les projets GeoLibre + la démo autonome
+        run: |
+          python3 tools/build_geolibre_projects.py
+          python3 tools/build_standalone.py
+
+      - name: Construire le site (base = sous-chemin du dépôt)
+        working-directory: prototype
+        env:
+          # ex. « /RIVE_ecosystem_services/ » — pour que les assets et les
+          # fetch de projets résolvent correctement sur le sous-chemin Pages.
+          VITE_BASE: ${{ steps.pages.outputs.base_path }}/
+        run: npm run build
+
+      - name: Ajouter la démo autonome + les ressources de démo au site
+        run: |
+          cp RIVE-demo.html prototype/dist/RIVE-demo.html
+          mkdir -p prototype/dist/demos
+          cp docs/demos/requetes-sql.sql docs/demos/README.md prototype/dist/demos/
+          # SPA fallback : sert index.html sur une route inconnue.
+          cp prototype/dist/index.html prototype/dist/404.html
+          touch prototype/dist/.nojekyll
+
+      - name: Téléverser l'artefact Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: prototype/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Déployer sur GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

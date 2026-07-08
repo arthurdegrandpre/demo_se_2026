@@ -1,0 +1,755 @@
+{
+  "version": "0.1.0",
+  "name": "RIVE — Carte-récit COP15 / 30x30",
+  "mapView": {
+    "center": [
+      -72.62,
+      46.28
+    ],
+    "zoom": 9.6,
+    "bearing": 0,
+    "pitch": 0
+  },
+  "basemapStyleUrl": "https://tiles.openfreemap.org/styles/positron",
+  "basemapVisible": true,
+  "basemapOpacity": 1,
+  "layers": [
+    {
+      "id": "mh-melccfp",
+      "name": "Milieux humides potentiels — MELCCFP 2023",
+      "type": "xyz",
+      "source": {
+        "type": "raster",
+        "tiles": [
+          "https://geo.environnement.gouv.qc.ca/donnees/rest/services/Biodiversite/MH_potentiels/MapServer/export?bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&size=256,256&dpi=96&format=png32&transparent=true&layers=show:0&f=image"
+        ],
+        "tileSize": 256,
+        "url": "https://geo.environnement.gouv.qc.ca/donnees/rest/services/Biodiversite/MH_potentiels/MapServer/export?bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&size=256,256&dpi=96&format=png32&transparent=true&layers=show:0&f=image",
+        "attribution": "© Gouvernement du Québec — MELCCFP, CMHPQ 2023",
+        "minzoom": 9
+      },
+      "visible": true,
+      "opacity": 0.8,
+      "style": {
+        "minZoom": 0,
+        "maxZoom": 24,
+        "fillColor": "#3b82f6",
+        "strokeColor": "#1e40af",
+        "strokeWidth": 1,
+        "strokeWidthUnit": "pixels",
+        "fillOpacity": 0.6,
+        "circleRadius": 6,
+        "vectorStyleMode": "single",
+        "vectorStyleProperty": "",
+        "vectorStyleClassCount": 5,
+        "vectorStyleColorRamp": "viridis",
+        "vectorStyleClassificationScheme": "equal-interval",
+        "vectorStyleStops": [
+          {
+            "value": 0,
+            "color": "#dbeafe"
+          },
+          {
+            "value": 1,
+            "color": "#2563eb"
+          }
+        ],
+        "vectorStyleExpression": "",
+        "rasterBrightnessMin": 0,
+        "rasterBrightnessMax": 1,
+        "rasterSaturation": 0,
+        "rasterContrast": 0,
+        "rasterHueRotate": 0
+      },
+      "metadata": {
+        "sourceService": "https://geo.environnement.gouv.qc.ca/donnees/rest/services/Biodiversite/MH_potentiels/MapServer",
+        "note": "Donnée réelle CMHPQ 2023, tuiles d'export ArcGIS. Masquée au-delà du 1:600 000."
+      }
+    },
+    {
+      "id": "zones-analyse",
+      "name": "Unités d'analyse — priorisation 30x30",
+      "type": "geojson",
+      "source": {
+        "type": "geojson"
+      },
+      "visible": true,
+      "opacity": 1,
+      "style": {
+        "minZoom": 0,
+        "maxZoom": 24,
+        "fillColor": "#3b82f6",
+        "strokeColor": "#ffffff",
+        "strokeWidth": 1,
+        "strokeWidthUnit": "pixels",
+        "fillOpacity": 0.55,
+        "circleRadius": 6,
+        "vectorStyleMode": "categorized",
+        "vectorStyleProperty": "classe_priorite",
+        "vectorStyleClassCount": 4,
+        "vectorStyleColorRamp": "viridis",
+        "vectorStyleClassificationScheme": "equal-interval",
+        "vectorStyleStops": [
+          {
+            "value": "Très élevée",
+            "color": "#7a0177",
+            "label": "Très élevée"
+          },
+          {
+            "value": "Élevée",
+            "color": "#c51b8a",
+            "label": "Élevée"
+          },
+          {
+            "value": "Moyenne",
+            "color": "#f768a1",
+            "label": "Moyenne"
+          },
+          {
+            "value": "Faible",
+            "color": "#fbb4b9",
+            "label": "Faible"
+          }
+        ],
+        "vectorStyleExpression": "",
+        "rasterBrightnessMin": 0,
+        "rasterBrightnessMax": 1,
+        "rasterSaturation": 0,
+        "rasterContrast": 0,
+        "rasterHueRotate": 0
+      },
+      "metadata": {},
+      "geojson": {
+        "type": "FeatureCollection",
+        "features": [
+          {
+            "type": "Feature",
+            "properties": {
+              "id": 1,
+              "nom": "Centre-ville Trois-Rivières",
+              "profil": "urbain",
+              "score_se": 25.7,
+              "priorite": 45.4,
+              "classe_priorite": "Moyenne",
+              "s_crue": 29,
+              "s_filtration": 15,
+              "s_carbone": 12,
+              "s_habitat": 27,
+              "s_recreation": 53,
+              "pression": 75,
+              "superficie_ha": 943
+            },
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    -72.5825,
+                    46.325
+                  ],
+                  [
+                    -72.5375,
+                    46.325
+                  ],
+                  [
+                    -72.5375,
+                    46.355000000000004
+                  ],
+                  [
+                    -72.5825,
+                    46.355000000000004
+                  ],
+                  [
+                    -72.5825,
+                    46.325
+                  ]
+                ]
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "id": 2,
+              "nom": "Confluence Saint-Maurice",
+              "profil": "riverain",
+              "score_se": 64.4,
+              "priorite": 59.8,
+              "classe_priorite": "Élevée",
+              "s_crue": 73,
+              "s_filtration": 59,
+              "s_carbone": 52,
+              "s_habitat": 71,
+              "s_recreation": 64,
+              "pression": 53,
+              "superficie_ha": 1669
+            },
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    -72.57000000000001,
+                    46.339999999999996
+                  ],
+                  [
+                    -72.52000000000001,
+                    46.339999999999996
+                  ],
+                  [
+                    -72.52000000000001,
+                    46.379999999999995
+                  ],
+                  [
+                    -72.57000000000001,
+                    46.379999999999995
+                  ],
+                  [
+                    -72.57000000000001,
+                    46.339999999999996
+                  ]
+                ]
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "id": 3,
+              "nom": "Rives du lac Saint-Pierre",
+              "profil": "humide",
+              "score_se": 83.7,
+              "priorite": 76.6,
+              "classe_priorite": "Très élevée",
+              "s_crue": 86,
+              "s_filtration": 89,
+              "s_carbone": 75,
+              "s_habitat": 93,
+              "s_recreation": 67,
+              "pression": 66,
+              "superficie_ha": 7044
+            },
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    -72.78,
+                    46.195
+                  ],
+                  [
+                    -72.66,
+                    46.195
+                  ],
+                  [
+                    -72.66,
+                    46.265
+                  ],
+                  [
+                    -72.78,
+                    46.265
+                  ],
+                  [
+                    -72.78,
+                    46.195
+                  ]
+                ]
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "id": 4,
+              "nom": "Plaine agricole Nicolet",
+              "profil": "agricole",
+              "score_se": 38.5,
+              "priorite": 52.7,
+              "classe_priorite": "Moyenne",
+              "s_crue": 47,
+              "s_filtration": 27,
+              "s_carbone": 40,
+              "s_habitat": 42,
+              "s_recreation": 35,
+              "pression": 74,
+              "superficie_ha": 4627
+            },
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    -72.69,
+                    46.21
+                  ],
+                  [
+                    -72.59,
+                    46.21
+                  ],
+                  [
+                    -72.59,
+                    46.27
+                  ],
+                  [
+                    -72.69,
+                    46.27
+                  ],
+                  [
+                    -72.69,
+                    46.21
+                  ]
+                ]
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "id": 5,
+              "nom": "Massif forestier périurbain",
+              "profil": "forestier",
+              "score_se": 77.8,
+              "priorite": 61.1,
+              "classe_priorite": "Élevée",
+              "s_crue": 71,
+              "s_filtration": 75,
+              "s_carbone": 88,
+              "s_habitat": 88,
+              "s_recreation": 62,
+              "pression": 36,
+              "superficie_ha": 5758
+            },
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    -72.515,
+                    46.365
+                  ],
+                  [
+                    -72.425,
+                    46.365
+                  ],
+                  [
+                    -72.425,
+                    46.435
+                  ],
+                  [
+                    -72.515,
+                    46.435
+                  ],
+                  [
+                    -72.515,
+                    46.365
+                  ]
+                ]
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "id": 6,
+              "nom": "Cap-de-la-Madeleine",
+              "profil": "urbain",
+              "score_se": 26.0,
+              "priorite": 45.6,
+              "classe_priorite": "Moyenne",
+              "s_crue": 30,
+              "s_filtration": 20,
+              "s_carbone": 17,
+              "s_habitat": 20,
+              "s_recreation": 51,
+              "pression": 75,
+              "superficie_ha": 1528
+            },
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    -72.5325,
+                    46.347500000000004
+                  ],
+                  [
+                    -72.4875,
+                    46.347500000000004
+                  ],
+                  [
+                    -72.4875,
+                    46.3825
+                  ],
+                  [
+                    -72.5325,
+                    46.3825
+                  ],
+                  [
+                    -72.5325,
+                    46.347500000000004
+                  ]
+                ]
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "id": 7,
+              "nom": "Corridor Saint-Maurice amont",
+              "profil": "forestier",
+              "score_se": 73.7,
+              "priorite": 55.8,
+              "classe_priorite": "Moyenne",
+              "s_crue": 69,
+              "s_filtration": 67,
+              "s_carbone": 85,
+              "s_habitat": 82,
+              "s_recreation": 63,
+              "pression": 29,
+              "superficie_ha": 4461
+            },
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    -72.59,
+                    46.38
+                  ],
+                  [
+                    -72.53,
+                    46.38
+                  ],
+                  [
+                    -72.53,
+                    46.46
+                  ],
+                  [
+                    -72.59,
+                    46.46
+                  ],
+                  [
+                    -72.59,
+                    46.38
+                  ]
+                ]
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "id": 8,
+              "nom": "Delta / marais têtes du lac",
+              "profil": "humide",
+              "score_se": 88.9,
+              "priorite": 79.3,
+              "classe_priorite": "Très élevée",
+              "s_crue": 95,
+              "s_filtration": 93,
+              "s_carbone": 86,
+              "s_habitat": 90,
+              "s_recreation": 75,
+              "pression": 65,
+              "superficie_ha": 3257
+            },
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    -72.7,
+                    46.265
+                  ],
+                  [
+                    -72.62,
+                    46.265
+                  ],
+                  [
+                    -72.62,
+                    46.315
+                  ],
+                  [
+                    -72.7,
+                    46.315
+                  ],
+                  [
+                    -72.7,
+                    46.265
+                  ]
+                ]
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "styles": {
+    "mh-melccfp": {
+      "minZoom": 0,
+      "maxZoom": 24,
+      "fillColor": "#3b82f6",
+      "strokeColor": "#1e40af",
+      "strokeWidth": 1,
+      "strokeWidthUnit": "pixels",
+      "fillOpacity": 0.6,
+      "circleRadius": 6,
+      "vectorStyleMode": "single",
+      "vectorStyleProperty": "",
+      "vectorStyleClassCount": 5,
+      "vectorStyleColorRamp": "viridis",
+      "vectorStyleClassificationScheme": "equal-interval",
+      "vectorStyleStops": [
+        {
+          "value": 0,
+          "color": "#dbeafe"
+        },
+        {
+          "value": 1,
+          "color": "#2563eb"
+        }
+      ],
+      "vectorStyleExpression": "",
+      "rasterBrightnessMin": 0,
+      "rasterBrightnessMax": 1,
+      "rasterSaturation": 0,
+      "rasterContrast": 0,
+      "rasterHueRotate": 0
+    },
+    "zones-analyse": {
+      "minZoom": 0,
+      "maxZoom": 24,
+      "fillColor": "#3b82f6",
+      "strokeColor": "#ffffff",
+      "strokeWidth": 1,
+      "strokeWidthUnit": "pixels",
+      "fillOpacity": 0.55,
+      "circleRadius": 6,
+      "vectorStyleMode": "categorized",
+      "vectorStyleProperty": "classe_priorite",
+      "vectorStyleClassCount": 4,
+      "vectorStyleColorRamp": "viridis",
+      "vectorStyleClassificationScheme": "equal-interval",
+      "vectorStyleStops": [
+        {
+          "value": "Très élevée",
+          "color": "#7a0177",
+          "label": "Très élevée"
+        },
+        {
+          "value": "Élevée",
+          "color": "#c51b8a",
+          "label": "Élevée"
+        },
+        {
+          "value": "Moyenne",
+          "color": "#f768a1",
+          "label": "Moyenne"
+        },
+        {
+          "value": "Faible",
+          "color": "#fbb4b9",
+          "label": "Faible"
+        }
+      ],
+      "vectorStyleExpression": "",
+      "rasterBrightnessMin": 0,
+      "rasterBrightnessMax": 1,
+      "rasterSaturation": 0,
+      "rasterContrast": 0,
+      "rasterHueRotate": 0
+    }
+  },
+  "preferences": {
+    "map": {
+      "restrictBounds": false,
+      "bounds": [
+        -180,
+        -85,
+        180,
+        85
+      ],
+      "minZoom": 0,
+      "maxZoom": 24,
+      "maxPitch": 85,
+      "renderWorldCopies": true
+    },
+    "environmentVariables": []
+  },
+  "metadata": {
+    "producer": "RIVE — services écosystémiques Trois-Rivières"
+  },
+  "storymap": {
+    "title": "Trois-Rivières & le 30x30",
+    "subtitle": "Prioriser les services écosystémiques selon le Cadre de Kunming-Montréal (COP15)",
+    "byline": "RIVE — démonstration",
+    "footer": "Sources : MELCCFP (CMHPQ 2023), unités d'analyse RIVE (démo). Cadre CBD/COP15.",
+    "theme": "dark",
+    "showMarkers": true,
+    "markerColor": "#c51b8a",
+    "inset": true,
+    "insetPosition": "bottom-right",
+    "hideChapterNav": false,
+    "startSlide": "global",
+    "endSlide": "none",
+    "chapters": [
+      {
+        "id": "ch1",
+        "title": "Rives du lac Saint-Pierre",
+        "description": "<p>Réserve de la biosphère de l'UNESCO et plus grande plaine inondable du Saint-Laurent. Régulation des crues et habitat : cœur de la <strong>cible 3 (30x30)</strong> du Cadre de Kunming-Montréal.</p><p><em>Priorité Très élevée · score services 83.7/100 · pression 66/100 · 7044 ha</em></p>",
+        "alignment": "left",
+        "hidden": false,
+        "location": {
+          "center": [
+            -72.732,
+            46.223
+          ],
+          "zoom": 12.2,
+          "pitch": 35,
+          "bearing": 0
+        },
+        "mapAnimation": "flyTo",
+        "rotateAnimation": false,
+        "onChapterEnter": [
+          {
+            "layerId": "zones-analyse",
+            "opacity": 0.75,
+            "duration": 800
+          },
+          {
+            "layerId": "mh-melccfp",
+            "opacity": 0.85,
+            "duration": 800
+          }
+        ],
+        "onChapterExit": []
+      },
+      {
+        "id": "ch2",
+        "title": "Delta / marais têtes du lac",
+        "description": "<p>Marais et hauts-fonds à la tête du lac Saint-Pierre — filtration de l'eau et frayères. Priorité <strong>très élevée</strong> : à protéger et restaurer (<strong>cible 2</strong>).</p><p><em>Priorité Très élevée · score services 88.9/100 · pression 65/100 · 3257 ha</em></p>",
+        "alignment": "left",
+        "hidden": false,
+        "location": {
+          "center": [
+            -72.668,
+            46.285
+          ],
+          "zoom": 12.2,
+          "pitch": 35,
+          "bearing": 0
+        },
+        "mapAnimation": "flyTo",
+        "rotateAnimation": false,
+        "onChapterEnter": [
+          {
+            "layerId": "zones-analyse",
+            "opacity": 0.75,
+            "duration": 800
+          },
+          {
+            "layerId": "mh-melccfp",
+            "opacity": 0.85,
+            "duration": 800
+          }
+        ],
+        "onChapterExit": []
+      },
+      {
+        "id": "ch3",
+        "title": "Confluence Saint-Maurice",
+        "description": "<p>Jonction Saint-Maurice / Saint-Laurent, corridor écologique et récréatif structurant. Maintien des services écosystémiques en milieu périurbain (<strong>cible 11</strong>).</p><p><em>Priorité Élevée · score services 64.4/100 · pression 53/100 · 1669 ha</em></p>",
+        "alignment": "left",
+        "hidden": false,
+        "location": {
+          "center": [
+            -72.55,
+            46.356
+          ],
+          "zoom": 12.2,
+          "pitch": 35,
+          "bearing": 0
+        },
+        "mapAnimation": "flyTo",
+        "rotateAnimation": false,
+        "onChapterEnter": [
+          {
+            "layerId": "zones-analyse",
+            "opacity": 0.75,
+            "duration": 800
+          },
+          {
+            "layerId": "mh-melccfp",
+            "opacity": 0.85,
+            "duration": 800
+          }
+        ],
+        "onChapterExit": []
+      },
+      {
+        "id": "ch4",
+        "title": "Massif forestier périurbain",
+        "description": "<p>Grand massif boisé en lisière urbaine : stockage du carbone et connectivité. Un espace vert et bleu à consolider (<strong>cible 12</strong>).</p><p><em>Priorité Élevée · score services 77.8/100 · pression 36/100 · 5758 ha</em></p>",
+        "alignment": "left",
+        "hidden": false,
+        "location": {
+          "center": [
+            -72.479,
+            46.393
+          ],
+          "zoom": 12.2,
+          "pitch": 35,
+          "bearing": 0
+        },
+        "mapAnimation": "flyTo",
+        "rotateAnimation": false,
+        "onChapterEnter": [
+          {
+            "layerId": "zones-analyse",
+            "opacity": 0.75,
+            "duration": 800
+          },
+          {
+            "layerId": "mh-melccfp",
+            "opacity": 0.85,
+            "duration": 800
+          }
+        ],
+        "onChapterExit": []
+      },
+      {
+        "id": "ch5",
+        "title": "Centre-ville Trois-Rivières",
+        "description": "<p>Tissu urbain sous forte pression : la priorité se joue ici sur la renaturalisation et l'accès aux espaces bleus (<strong>cible 12</strong>).</p><p><em>Priorité Moyenne · score services 25.7/100 · pression 75/100 · 943 ha</em></p>",
+        "alignment": "left",
+        "hidden": false,
+        "location": {
+          "center": [
+            -72.5645,
+            46.337
+          ],
+          "zoom": 12.2,
+          "pitch": 35,
+          "bearing": 0
+        },
+        "mapAnimation": "flyTo",
+        "rotateAnimation": false,
+        "onChapterEnter": [
+          {
+            "layerId": "zones-analyse",
+            "opacity": 0.75,
+            "duration": 800
+          },
+          {
+            "layerId": "mh-melccfp",
+            "opacity": 0.85,
+            "duration": 800
+          }
+        ],
+        "onChapterExit": []
+      }
+    ]
+  }
+}

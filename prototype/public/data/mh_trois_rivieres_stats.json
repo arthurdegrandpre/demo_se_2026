@@ -1,0 +1,57 @@
+{
+  "byclass": {
+    "Marécage": {
+      "n": 476,
+      "ha": 1269.99
+    },
+    "Prairie humide": {
+      "n": 12,
+      "ha": 32.45
+    },
+    "Marais": {
+      "n": 84,
+      "ha": 109.72
+    },
+    "Tourbière boisée": {
+      "n": 27,
+      "ha": 30.83
+    },
+    "Tourbière ouverte ombrotrophe": {
+      "n": 75,
+      "ha": 740.51
+    },
+    "Tourbière ouverte minérotrophe": {
+      "n": 5,
+      "ha": 3.04
+    },
+    "Eau peu profonde": {
+      "n": 89,
+      "ha": 2118.28
+    }
+  },
+  "by_regime": {
+    "—": {
+      "n": 661,
+      "ha": 3530.44
+    },
+    "indifférenciée": {
+      "n": 26,
+      "ha": 24.78
+    },
+    "ombrotrophe": {
+      "n": 75,
+      "ha": 740.51
+    },
+    "minérotrophe": {
+      "n": 6,
+      "ha": 9.09
+    }
+  },
+  "total_ha": 4304.82,
+  "n_polygones": 768,
+  "confiance": {
+    "Excellent": 712,
+    "Moyen": 46,
+    "Bon": 10
+  }
+}
