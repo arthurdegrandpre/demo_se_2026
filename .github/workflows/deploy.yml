@@ -38,7 +38,7 @@ jobs:
 
       - name: Installer les dépendances
         working-directory: prototype
-        run: npm ci
+        run: npm ci || npm install
 
       - name: Régénérer les projets GeoLibre + la démo autonome
         run: |

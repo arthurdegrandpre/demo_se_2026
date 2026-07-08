@@ -106,7 +106,7 @@ def project(name, layers, center, zoom, extra=None):
          "mapView": {"center": center, "zoom": zoom, "bearing": 0, "pitch": 0},
          "basemapStyleUrl": BASEMAP, "basemapVisible": True, "basemapOpacity": 1,
          "layers": layers, "styles": styles, "preferences": preferences(),
-         "metadata": {"producer": "RIVE — services écosystémiques Trois-Rivières"}}
+         "metadata": {"producer": "Demo_SE_RIVE_2026 — services écosystémiques Trois-Rivières"}}
     if extra:
         p.update(extra)
     return p
@@ -144,7 +144,7 @@ def main():
 
     # 1) Projet principal : MH en tuiles ArcGIS + zones
     write("rive-trois-rivieres.geolibre.json", project(
-        "RIVE — Services écosystémiques · Trois-Rivières",
+        "Demo_SE_RIVE_2026 — Services écosystémiques · Trois-Rivières",
         [raster_export_layer("mh-melccfp", "Milieux humides potentiels — MELCCFP 2023"),
          geojson_layer("zones-analyse", "Unités d'analyse — priorisation 30x30 (démo)",
                        zones, zones_style,
@@ -153,7 +153,7 @@ def main():
 
     # 2) Démo SQL : extrait réel CMHPQ (vecteur, interrogeable) + zones
     write("rive-sql-demo.geolibre.json", project(
-        "RIVE — Démo SQL spatial · Milieux humides CMHPQ (extrait réel)",
+        "Demo_SE_RIVE_2026 — Démo SQL spatial · Milieux humides CMHPQ (extrait réel)",
         [geojson_layer("mh-cmhpq-tr", "Milieux humides CMHPQ — extrait Trois-Rivières (768 polygones)",
                        mh, mh_style,
                        metadata={"note": "Donnée réelle MELCCFP CMHPQ 2023, extrait borné + simplifié (~50 m). "
@@ -206,7 +206,7 @@ def main():
     storymap = {
         "title": "Trois-Rivières & le 30x30",
         "subtitle": "Prioriser les services écosystémiques selon le Cadre de Kunming-Montréal (COP15)",
-        "byline": "RIVE — démonstration",
+        "byline": "Demo_SE_RIVE_2026 — démonstration",
         "footer": "Sources : MELCCFP (CMHPQ 2023), unités d'analyse RIVE (démo). Cadre CBD/COP15.",
         "theme": "dark", "showMarkers": True, "markerColor": "#c51b8a",
         "inset": True, "insetPosition": "bottom-right",
@@ -214,7 +214,7 @@ def main():
         "chapters": [chapter(n, i) for i, n in enumerate(order, 1)],
     }
     write("rive-storymap-cop15.geolibre.json", project(
-        "RIVE — Carte-récit COP15 / 30x30",
+        "Demo_SE_RIVE_2026 — Carte-récit COP15 / 30x30",
         [raster_export_layer("mh-melccfp", "Milieux humides potentiels — MELCCFP 2023"),
          geojson_layer("zones-analyse", "Unités d'analyse — priorisation 30x30",
                        zones, categorized("classe_priorite", PRIORITE_COLORS,

@@ -49,6 +49,14 @@ Mise en route (une fois) : dans **Settings → Pages → Build and deployment**,
 **Source : GitHub Actions**. Le prochain push publie le site à
 `https://<utilisateur>.github.io/<dépôt>/`.
 
+> **La page publiée affiche le README (et non l'app) ?** C'est que Pages est en mode
+> **« Deploy from a branch »** : GitHub rend alors le `README.md` de la racine et **ignore**
+> le site construit par le workflow. Correctif : **Settings → Pages → Source : GitHub Actions**,
+> puis relancer le workflow (onglet *Actions* → *Déployer RIVE…* → *Run workflow*, ou un
+> nouveau push). Par sécurité, un `index.html` de secours à la racine redirige vers la démo
+> autonome `RIVE-demo.html` si jamais le mode « branche » reste actif — mais l'app complète
+> (onglet GeoLibre, démos SQL et carte-récit) n'est servie que via GitHub Actions.
+
 Ce que le workflow met en ligne, comme fichiers statiques : le tableau de bord (Vite/React),
 les trois projets `*.geolibre.json`, l'extrait CMHPQ réel, la démo autonome `RIVE-demo.html`
 et les ressources `demos/`. Il régénère les projets et la démo (`tools/build_*.py`) puis

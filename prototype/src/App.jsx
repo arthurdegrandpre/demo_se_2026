@@ -21,13 +21,13 @@ export default function App() {
     <div className="app">
       <header className="topbar">
         <div className="brand">
-          <span className="logo">RIVE</span>
+          <span className="logo">Demo_SE_RIVE_2026</span>
           <span className="tagline">Services écosystémiques · Région de Trois-Rivières</span>
         </div>
         <div className="top-actions">
           <div className="view-switch" role="tablist" aria-label="Vue">
             <button className={view === 'rive' ? 'active' : ''} onClick={() => setView('rive')}>
-              Carte RIVE
+              Carte
             </button>
             <button className={view === 'geolibre' ? 'active' : ''} onClick={() => setView('geolibre')}>
               GeoLibre

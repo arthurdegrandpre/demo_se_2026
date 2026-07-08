@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "name": "RIVE — Services écosystémiques · Trois-Rivières",
+  "name": "Demo_SE_RIVE_2026 — Services écosystémiques · Trois-Rivières",
   "mapView": {
     "center": [
       -72.62,
@@ -581,6 +581,6 @@
     "environmentVariables": []
   },
   "metadata": {
-    "producer": "RIVE — services écosystémiques Trois-Rivières"
+    "producer": "Demo_SE_RIVE_2026 — services écosystémiques Trois-Rivières"
   }
 }

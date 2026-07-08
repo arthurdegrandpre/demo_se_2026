@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "name": "RIVE — Démo SQL spatial · Milieux humides CMHPQ (extrait réel)",
+  "name": "Demo_SE_RIVE_2026 — Démo SQL spatial · Milieux humides CMHPQ (extrait réel)",
   "mapView": {
     "center": [
       -72.6,
@@ -50066,6 +50066,6 @@
     "environmentVariables": []
   },
   "metadata": {
-    "producer": "RIVE — services écosystémiques Trois-Rivières"
+    "producer": "Demo_SE_RIVE_2026 — services écosystémiques Trois-Rivières"
   }
 }

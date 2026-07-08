@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "name": "RIVE — Carte-récit COP15 / 30x30",
+  "name": "Demo_SE_RIVE_2026 — Carte-récit COP15 / 30x30",
   "mapView": {
     "center": [
       -72.62,
@@ -579,12 +579,12 @@
     "environmentVariables": []
   },
   "metadata": {
-    "producer": "RIVE — services écosystémiques Trois-Rivières"
+    "producer": "Demo_SE_RIVE_2026 — services écosystémiques Trois-Rivières"
   },
   "storymap": {
     "title": "Trois-Rivières & le 30x30",
     "subtitle": "Prioriser les services écosystémiques selon le Cadre de Kunming-Montréal (COP15)",
-    "byline": "RIVE — démonstration",
+    "byline": "Demo_SE_RIVE_2026 — démonstration",
     "footer": "Sources : MELCCFP (CMHPQ 2023), unités d'analyse RIVE (démo). Cadre CBD/COP15.",
     "theme": "dark",
     "showMarkers": true,

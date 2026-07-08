@@ -21,7 +21,7 @@ const MH_ARCGIS =
 
 // Projets poussables. `file` est servi en même origine depuis public/.
 const PROJECTS = [
-  { key: 'main', label: 'Projet RIVE', file: 'rive-trois-rivieres.geolibre.json',
+  { key: 'main', label: 'Projet principal', file: 'rive-trois-rivieres.geolibre.json',
     hint: 'Milieux humides (MELCCFP) + unités d’analyse. Zoomer au niveau ≈ 10+.' },
   { key: 'sql', label: 'Démo SQL', file: 'rive-sql-demo.geolibre.json',
     hint: 'Extrait réel CMHPQ (768 polygones). Ouvrir Processing → SQL Workspace et coller docs/demos/requetes-sql.sql.' },

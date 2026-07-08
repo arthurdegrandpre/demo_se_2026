@@ -1,9 +1,9 @@
 {
-  "name": "rive-prototype",
+  "name": "demo_se_rive_2026",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "RIVE — tableau de bord des services écosystémiques de la région de Trois-Rivières",
+  "description": "Demo_SE_RIVE_2026 — tableau de bord des services écosystémiques de la région de Trois-Rivières",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
