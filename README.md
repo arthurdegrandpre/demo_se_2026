@@ -73,17 +73,21 @@ github.io** :
   possible, car Pages sert les intervalles d'octets : le socle « cloud-native, zéro serveur ».
 
 Dans l'app, l'onglet **GeoLibre** expose ces liens (bouton *Copier le lien*, *Ouvrir dans un
-onglet*). En local (`localhost`), le partage est désactivé avec un avertissement : le projet
-n'est pas encore accessible publiquement. Le **pont `postMessage`** reste le mécanisme de
-chargement interne (fonctionne en local comme en ligne).
+onglet*).
 
 La bascule « GeoLibre » en haut de l'app affiche GeoLibre Web dans un panneau embarqué (iframe) et
-**charge automatiquement** le projet RIVE (`public/rive-trois-rivieres.geolibre.json`, format de projet
-officiel GeoLibre, données des zones inlinées) via le **pont embed** de GeoLibre (`?embed=1` +
-`postMessage geolibre:load-project`) : la page RIVE lit le projet en même origine puis le pousse dans
-l'iframe. Aucune requête cross-origin — le paramètre `?url=` échouerait ici, car les navigateurs
-bloquent les requêtes « site public → localhost » (CORS / Local Network Access). Pour pointer vers un
-projet hébergé ailleurs, définissez `VITE_GEOLIBRE_PROJECT_URL`.
+**charge le projet RIVE** par le paramètre **`?url=`** — le seul mécanisme d'embarquement toujours
+actif côté GeoLibre. (Le pont `postMessage`/`?embed=1` d'une version antérieure ne fonctionne pas sur
+le viewer hébergé : il est restreint aux origines explicitement autorisées par le déploiement via
+`sharing.embedOrigins`, ce que `web.geolibre.app` ne fait pas — voir la
+[doc d'embarquement](https://geolibre.app/user-guide/embedding/).)
+
+Conséquence : GeoLibre doit récupérer le `.geolibre.json` depuis une **URL publique**. Une fois le
+site publié sur GitHub Pages, les projets sont servis en https et le panneau se charge tout seul,
+localement comme en ligne. En développement local (`localhost` / `file://`), `web.geolibre.app` ne
+peut pas lire le projet (non public) : GeoLibre s'ouvre **vide** avec un rappel de chargement manuel
+(*Add Data → ArcGIS*). Pour prévisualiser en local contre des fichiers déjà publiés, définissez
+`VITE_GEOLIBRE_PUBLIC_BASE` (ex. l'URL GitHub Pages du site) dans `prototype/.env.local`.
 
 Le tableau de bord repose sur **deux couches**, pour rester honnête et lisible :
 

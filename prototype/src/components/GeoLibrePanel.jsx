@@ -1,25 +1,30 @@
-import { useEffect, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 
-// Panneau GeoLibre embarqué — chargement de projets via le « embed bridge ».
+// Panneau GeoLibre embarqué — chargement de projets par le paramètre `?url=`.
 //
-// Pourquoi pas `?url=` ? La version hébergée (web.geolibre.app) devrait alors
-// récupérer le projet depuis localhost : les navigateurs récents bloquent ce
-// type de requête « site public → réseau local » (CORS / Local Network Access).
+// Historique : une version précédente poussait le projet par postMessage
+// (`?embed=1` + `geolibre:load-project`). Ce pont est désormais DÉSACTIVÉ par
+// défaut côté GeoLibre : il n'est ouvert qu'aux origines explicitement
+// autorisées par le déploiement (`sharing.embedOrigins` de deployment.json).
+// La version hébergée web.geolibre.app n'autorise évidemment pas localhost ni
+// un github.io quelconque → le pont ne peut pas fonctionner. Doc :
+// https://geolibre.app/user-guide/embedding/
 //
-// À la place, GeoLibre expose un pont postMessage (apps/geolibre-desktop/src/
-// hooks/useEmbedBridge.ts, activé par `?embed=1`) : l'iframe annonce
-// `geolibre:ready`, puis le parent pousse un projet complet avec un message
-// `geolibre:load-project`. Aucune requête cross-origin : c'est NOTRE page qui
-// lit les .geolibre.json (même origine), puis les transmet. On peut donc aussi
-// BASCULER de projet à volonté (projet principal, démo SQL, carte-récit).
+// Le seul mécanisme d'embarquement toujours actif est `?url=<URL publique du
+// projet>` : GeoLibre récupère lui-même le .geolibre.json depuis une URL
+// publique. C'est le mode documenté pour les iframes, et il s'aligne sur la
+// publication GitHub Pages (les projets y sont servis à des URL publiques).
+//
+// Conséquence : en local (localhost / file://), web.geolibre.app ne peut pas
+// lire le projet (non public) — on affiche alors GeoLibre vide + un rappel de
+// chargement manuel. Pour prévisualiser en local contre des fichiers publiés,
+// définir VITE_GEOLIBRE_PUBLIC_BASE (ex. l'URL GitHub Pages du site).
 
 const GEOLIBRE_ORIGIN = 'https://web.geolibre.app'
-const IFRAME_SRC = `${GEOLIBRE_ORIGIN}/?embed=1&layout=compact`
 
 const MH_ARCGIS =
   'https://geo.environnement.gouv.qc.ca/donnees/rest/services/Biodiversite/MH_potentiels/MapServer'
 
-// Projets poussables. `file` est servi en même origine depuis public/.
 const PROJECTS = [
   { key: 'main', label: 'Projet principal', file: 'rive-trois-rivieres.geolibre.json',
     hint: 'Milieux humides (MELCCFP) + unités d’analyse. Zoomer au niveau ≈ 10+.' },
@@ -29,85 +34,44 @@ const PROJECTS = [
     hint: 'Récit 30x30 : Project → Story Map pour présenter / exporter en HTML.' },
 ]
 
-function projectFileUrl(file) {
-  const override = import.meta.env?.VITE_GEOLIBRE_PROJECT_URL
-  if (override && file === PROJECTS[0].file) return override
-  return new URL(`${import.meta.env.BASE_URL || './'}${file}`, window.location.href).href
-}
-
-// Lien de partage GeoLibre : `?url=` charge le projet depuis son URL publique.
-// C'est LE mode de partage une fois le site publié sur GitHub Pages (les
-// .geolibre.json sont alors servis en https par github.io, que web.geolibre.app
-// peut récupérer). En local (localhost), ce lien ne fonctionne pas encore : le
-// projet n'est pas accessible publiquement — d'où l'avertissement affiché.
-function shareUrl(file) {
-  return `${GEOLIBRE_ORIGIN}/?url=${encodeURIComponent(projectFileUrl(file))}&layout=compact`
-}
+const PUBLIC_BASE = import.meta.env?.VITE_GEOLIBRE_PUBLIC_BASE || ''
 
 function isLocalHost() {
   return /^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(window.location.hostname) ||
     window.location.protocol === 'file:'
 }
 
+// URL publique du projet (celle que web.geolibre.app devra récupérer).
+function publicProjectUrl(file) {
+  const base = PUBLIC_BASE
+    ? PUBLIC_BASE.replace(/\/?$/, '/')
+    : (import.meta.env.BASE_URL || './')
+  return new URL(`${base}${file}`, window.location.href).href
+}
+
+// Src de l'iframe : viewer GeoLibre chargeant le projet par `?url=`.
+function viewerSrc(file) {
+  return `${GEOLIBRE_ORIGIN}/?url=${encodeURIComponent(publicProjectUrl(file))}&layout=compact&welcome=0`
+}
+
 export default function GeoLibrePanel() {
-  const iframeRef = useRef(null)
-  const readyRef = useRef(false)
-  const seqRef = useRef(0)
   const [current, setCurrent] = useState(PROJECTS[0])
   const [copied, setCopied] = useState(false)
-  const currentRef = useRef(current)
-  currentRef.current = current
-  const local = isLocalHost()
+
+  // En local sans base publique, le viewer hébergé ne peut pas lire le projet.
+  const cannotLoad = isLocalHost() && !PUBLIC_BASE
+
+  // Src effective de l'iframe (remonte l'iframe à chaque changement via `key`).
+  const src = useMemo(
+    () => (cannotLoad ? `${GEOLIBRE_ORIGIN}/?layout=compact&welcome=0` : viewerSrc(current.file)),
+    [current, cannotLoad],
+  )
 
   function copyShare() {
-    const url = shareUrl(current.file)
+    const url = viewerSrc(current.file)
     const done = () => { setCopied(true); setTimeout(() => setCopied(false), 2000) }
     if (navigator.clipboard?.writeText) navigator.clipboard.writeText(url).then(done).catch(done)
     else done()
-  }
-
-  // Pousse un projet dans l'iframe (fetch même origine → postMessage).
-  function pushProject(proj) {
-    const frame = iframeRef.current
-    if (!frame || !frame.contentWindow || !readyRef.current) return
-    fetch(projectFileUrl(proj.file))
-      .then((r) => {
-        if (!r.ok) throw new Error(`HTTP ${r.status} sur ${proj.file}`)
-        return r.json()
-      })
-      .then((project) => {
-        seqRef.current += 1
-        frame.contentWindow.postMessage(
-          { type: 'geolibre:load-project', project, seq: seqRef.current },
-          GEOLIBRE_ORIGIN,
-        )
-      })
-      .catch((err) => console.warn('RIVE — projet GeoLibre :', err))
-  }
-
-  useEffect(() => {
-    const onMessage = (e) => {
-      if (e.origin !== GEOLIBRE_ORIGIN) return
-      const frame = iframeRef.current
-      if (!frame || e.source !== frame.contentWindow) return
-      const type = e.data && e.data.type
-      if (type === 'geolibre:ready') {
-        // (ré)émis à chaque (re)chargement de l'iframe → repousser le projet courant.
-        readyRef.current = true
-        pushProject(currentRef.current)
-      } else if (type === 'geolibre:error') {
-        console.warn('GeoLibre —', e.data.message)
-      }
-      // les instantanés `geolibre:state` renvoyés par le pont sont ignorés
-    }
-    window.addEventListener('message', onMessage)
-    return () => window.removeEventListener('message', onMessage)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  function select(proj) {
-    setCurrent(proj)
-    pushProject(proj) // si l'iframe est déjà prête, bascule immédiate
   }
 
   return (
@@ -118,12 +82,12 @@ export default function GeoLibrePanel() {
             <button
               key={p.key}
               className={p.key === current.key ? 'active' : ''}
-              onClick={() => select(p)}
+              onClick={() => setCurrent(p)}
             >
               {p.label}
             </button>
           ))}
-          <a className="geolibre-tablink" href={shareUrl(current.file)} target="_blank" rel="noreferrer">
+          <a className="geolibre-tablink" href={viewerSrc(current.file)} target="_blank" rel="noreferrer">
             Ouvrir dans un onglet ↗
           </a>
           <button className="geolibre-share" onClick={copyShare} title="Copier le lien de partage GeoLibre (?url=)">
@@ -135,20 +99,21 @@ export default function GeoLibrePanel() {
           {current.key === 'main' && (
             <>Chargement manuel si besoin : <em>Add Data → ArcGIS</em> avec <code>{MH_ARCGIS}</code>. </>
           )}
-          {local && (
+          {cannotLoad && (
             <em className="geolibre-warn">
-              Le lien de partage s’activera une fois le site publié (GitHub Pages) — en local, le projet
-              n’est pas accessible publiquement.
+              En local, web.geolibre.app ne peut pas lire le projet (non public) : GeoLibre s’ouvre vide.
+              Le projet se chargera automatiquement une fois le site publié (GitHub Pages), ou définissez
+              <code>VITE_GEOLIBRE_PUBLIC_BASE</code> pour prévisualiser contre des fichiers déjà publiés.
             </em>
           )}
         </div>
       </div>
       <iframe
-        ref={iframeRef}
+        key={src}
         title="GeoLibre"
-        src={IFRAME_SRC}
+        src={src}
         className="geolibre-iframe"
-        allow="clipboard-read; clipboard-write; geolocation"
+        allow="fullscreen; clipboard-read; clipboard-write; geolocation"
       />
     </div>
   )

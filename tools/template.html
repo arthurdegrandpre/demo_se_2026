@@ -108,29 +108,31 @@ h3{font-size:13px;margin:18px 0 8px;color:var(--muted);text-transform:uppercase;
       <div class="view-layer" id="layer-rive"><div id="map"></div><div id="card"></div></div>
       <div class="view-layer" id="layer-geo" style="display:none">
         <div class="geolibre-panel">
-          <div class="geolibre-note">Le projet RIVE (milieux humides MELCCFP + unit&eacute;s d&rsquo;analyse) est pouss&eacute; automatiquement dans GeoLibre. <strong>Zoomer sur la r&eacute;gion (niveau &ge; 10)</strong> — le service masque les milieux humides au-del&agrave; du 1:600 000. Chargement manuel si besoin&nbsp;: <em>Add Data &rarr; ArcGIS</em>, coller <code>https://geo.environnement.gouv.qc.ca/donnees/rest/services/Biodiversite/MH_potentiels/MapServer</code> (ou le WMS <code>https://geo.environnement.gouv.qc.ca/donnees/services/Biodiversite/MH_potentiels/MapServer/WMSServer</code>).</div>
-          <iframe id="geolibre-frame" title="GeoLibre" src="https://web.geolibre.app/?embed=1&amp;layout=compact" allow="clipboard-read; clipboard-write; geolocation"></iframe>
+          <div class="geolibre-note">Explorez le territoire dans GeoLibre. Une fois cette page servie &agrave; une URL publique (GitHub Pages), le projet RIVE se charge automatiquement via <code>?url=</code>. En local (double-clic / file://), web.geolibre.app ne peut pas lire le projet&nbsp;: GeoLibre s&rsquo;ouvre vide &mdash; <em>Add Data &rarr; ArcGIS</em>, coller <code>https://geo.environnement.gouv.qc.ca/donnees/rest/services/Biodiversite/MH_potentiels/MapServer</code>, puis <strong>zoomer (niveau &ge; 10)</strong>.</div>
+          <iframe id="geolibre-frame" title="GeoLibre" allow="fullscreen; clipboard-read; clipboard-write; geolocation"></iframe>
         </div>
       </div>
     </main>
   </div>
 </div>
 <script>
-// Pont GeoLibre (useEmbedBridge, activé par ?embed=1) : l'iframe annonce
-// `geolibre:ready`, on lui pousse alors le projet complet — aucune requête
-// cross-origin, donc aucun problème de CORS ni de Local Network Access.
-const GEOLIBRE_ORIGIN = "https://web.geolibre.app";
-const GEOLIBRE_PROJECT = __GEOLIBRE_PROJECT__;
-window.addEventListener("message", (e) => {
-  const frame = document.getElementById("geolibre-frame");
-  if (e.origin !== GEOLIBRE_ORIGIN || !frame || e.source !== frame.contentWindow) return;
-  if (e.data && e.data.type === "geolibre:ready") {
-    frame.contentWindow.postMessage(
-      { type: "geolibre:load-project", project: GEOLIBRE_PROJECT, seq: 1 },
-      GEOLIBRE_ORIGIN
-    );
+// GeoLibre s'embarque par le paramètre `?url=` (seul mécanisme toujours actif ;
+// le pont postMessage est restreint par sharing.embedOrigins côté déploiement).
+// On ne peut lui passer qu'une URL PUBLIQUE : quand cette page est servie en
+// http(s) non-local, on résout le projet par rapport à son emplacement ; en
+// local/file:// on ouvre GeoLibre vide (chargement manuel via Add Data).
+(function () {
+  var ORIGIN = "https://web.geolibre.app";
+  var f = document.getElementById("geolibre-frame");
+  var local = /^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(location.hostname) ||
+    location.protocol === "file:";
+  if (local) {
+    f.src = ORIGIN + "/?layout=compact&welcome=0";
+  } else {
+    var url = new URL("rive-trois-rivieres.geolibre.json", location.href).href;
+    f.src = ORIGIN + "/?url=" + encodeURIComponent(url) + "&layout=compact&welcome=0";
   }
-});
+})();
 </script>
 <script>
 const DATA = __DATA__;

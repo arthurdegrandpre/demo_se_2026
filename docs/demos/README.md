@@ -5,9 +5,11 @@ affichage : un **SIG d'analyse complet** et un **outil de récit cartographique*
 tous deux sur la donnée réelle du territoire, sans serveur ni installation.
 
 Elles se lancent depuis le prototype : onglet **GeoLibre**, boutons
-**« Démo SQL »** et **« Carte-récit COP15 »**. Chaque bouton pousse le projet
-`.geolibre.json` correspondant dans GeoLibre via le pont `postMessage` (aucune
-requête cross-origin).
+**« Démo SQL »** et **« Carte-récit COP15 »**. Chaque bouton charge le projet
+`.geolibre.json` correspondant dans GeoLibre via le paramètre **`?url=`** (le
+projet est récupéré depuis son URL publique — immédiat une fois le site publié
+sur GitHub Pages ; en local, définir `VITE_GEOLIBRE_PUBLIC_BASE` pour
+prévisualiser, sinon GeoLibre s'ouvre vide).
 
 ## 1. SQL spatial dans le navigateur (DuckDB-WASM)
 

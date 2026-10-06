@@ -125,7 +125,10 @@ couche `0`). Elle illustre le principe « réutilisation plutôt que réinventio
 
 - **GeoLibre** : le projet `rive-trois-rivieres.geolibre.json` (format officiel — `mapView`,
   `basemapStyleUrl`, `layers[].source`, `styles`) charge la couche en tuiles d'export ArcGIS (type `xyz`)
-  et se charge automatiquement dans le panneau embarqué via le pont embed de GeoLibre (`?embed=1` + `postMessage geolibre:load-project` — sans requête cross-origin ; le paramètre `?url=` reste utile pour un projet hébergé sur une URL publique). Chargement manuel : *Add Data →
+  et se charge dans le panneau embarqué via le paramètre **`?url=`** (seul mécanisme d'embarquement
+  toujours actif ; le pont `postMessage`/`?embed=1` est restreint par `sharing.embedOrigins` côté
+  déploiement et inopérant sur le viewer hébergé). GeoLibre récupère donc le `.geolibre.json` depuis
+  une **URL publique** — immédiat une fois le site publié sur GitHub Pages. Chargement manuel : *Add Data →
   ArcGIS*, ou WMS via `https://geo.environnement.gouv.qc.ca/donnees/services/Biodiversite/MH_potentiels/MapServer/WMSServer`
   (endpoint OGC sous `/donnees/services/`, sans « rest »).
 - **Tableau de bord RIVE** : l'export dynamique ArcGIS
